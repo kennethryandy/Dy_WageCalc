@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LastName_WageCalc</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        input,
+        select {
+            border: 2px solid #044284;
+            border-radius: 2px;
+            box-sizing: 1px 1px 2px #666;
+            padding: 5px;
+        }
+
+        .submit-button {
+            font-size: 1.25rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .wage-calc-container {
+            width: 100%;
+            height: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 720px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 8px 12px;
+        }
+
+        .flex-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        thead>tr {
+            background-color: #044284;
+            color: #fff;
+        }
+
+        thead>tr>th {
+            padding: 4px 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wage-calc-container">
+        <div class="container">
+            <div class="input-container">
+                <form id="wage_form" style="display: flex; gap: 8px; flex-direction: column;">
+                    <div>
+                        <label>Salary Amount</label>
+                        <div class="flex-container">
+                            <p>₱</p>
+                            <input type="number" name="salary" id="salary" value="60" required />
+                            <p>per</p>
+                            <select name="per" id="per" required>
+                                <option value="hour">Hour</option>
+                                <option value="day">Day</option>
+                                <option value="week">Week</option>
+                                <option value="month">Month</option>
+                                <option value="year">Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <div class="flex-container" style="justify-content: space-between;">
+                            <label for="hours_per_day">Hours per Day</label>
+                            <input type="number" name="hours_per_day" id="hours_per_day" value="8" required>
+                        </div>
+                        <div class="flex-container" style="justify-content: space-between;">
+                            <label for="hours_per_week">Hours per Week</label>
+                            <input type="number" name="hours_per_week" id="hours_per_week" value="40" required>
+                        </div>
+                        <div class="flex-container" style="justify-content: space-between;">
+                            <label for="days_per_week">Days per Week</label>
+                            <input type="number" name="days_per_week" id="days_per_week" value="5" min="1" min="7" required>
+                        </div>
+                    </div>
+                    <hr />
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <div class="flex-container" style="justify-content: space-between;">
+                            <span style="font-style: italic;">Optional:</span>
+                        </div>
+                        <div class="flex-container" style="justify-content: space-between;">
+                            <label for="holidays">Holidays per Year</label>
+                            <input type="number" name="holidays" id="holidays" value="10">
+                        </div>
+                    </div>
+                    <button class="submit-button" type="submit">Calculate</button>
+                </form>
+            </div>
+            <div class="input-container" style="justify-content: space-between; height: 100%; width: 100%;">
+                <div style="width: 100%; color: #fff; background: #518428; padding: 6px 0px;">
+                    <h2 style="font-size: 22px; margin-left: 6px;">Result</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Unadjusted</th>
+                            <th>Holidays days adjusted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="min-width: 90px; padding-left: 4px;">Hourly</td>
+                            <td id="hourly_result_text" style="text-align: right; padding-right: 6px;">₱60</td>
+                            <td id="hourly_adjusted_result_text" style="text-align: right; padding-right: 6px;">₱57.69</td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 90px; padding-left: 4px;">Daily</td>
+                            <td id="daily_result_text" style="text-align: right; padding-right: 6px;">₱480</td>
+                            <td id="daily_adjusted_result_text" style="text-align: right; padding-right: 6px;">₱461.54</td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 90px; padding-left: 4px;">Weekly</td>
+                            <td id="weekly_result_text" style="text-align: right; padding-right: 6px;">₱2,400</td>
+                            <td id="weekly_adjusted_result_text" style="text-align: right; padding-right: 6px;">₱2,307.69</td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 90px; padding-left: 4px;">Monthly</td>
+                            <td id="monthly_result_text" style="text-align: right; padding-right: 6px;">₱10,400</td>
+                            <td id="monthly_adjusted_result_text" style="text-align: right; padding-right: 6px;">₱10,000</td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 90px; padding-left: 4px;">Quarterly</td>
+                            <td id="quarterly_result_text" style="text-align: right; padding-right: 6px;">₱31,200</td>
+                            <td id="quarterly_adjusted_result_text" style="text-align: right; padding-right: 6px;">₱30,000</td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 90px; padding-left: 4px;">Annual</td>
+                            <td id="annual_result_text" style="text-align: right; padding-right: 6px;">₱124,800</td>
+                            <td id="annual_adjusted_result_text" style="text-align: right; padding-right: 6px;">₱120,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="container" style="flex-direction: column; gap: 6px;" style="margin-top: 16px;">
+            <h2>Calculation</h2>
+            <p>Using a 60 hourly rate, an average of eight hours worked each day, and 260 working days a year (52 weeks multiplied by 5 working days a week), the annual unadjusted salary can be calculated as:</p>
+            <p style="text-align: center;">₱60 * 8 * (260) = 124,800</p>
+            <p>As can be seen, the hourly rate is multiplied by the number of working days a year (unadjusted) and subsequently multiplied by the number of hours in a working day. The adjusted annual salary can be calculated as:</p>
+            <p style="text-align: center;">₱60 * 8 * (260 - 10) = ₱120,000</p>
+            <p>Using 10 holidays a year, subtract these non-working days from the total number of working days a year.</p>
+            <p>All bi-weekly, semi-monthly, monthly, and quarterly figures are derived from these annual calculations. It is important to make the distinction between bi-weekly, which happens every two weeks, and semi-monthly, which occurs twice per month, usually on the fifteenth and final day of the month.</p>
+        </div>
+    </div>
+    <script>
+        const AVERAGE_WORKING_DAYS_YEAR = 260; // AVERAGE WORKING DAYS IN A YEAR IS 260 days
+
+        // TABLE DOMS
+        let hourlyResultTextDom = document.querySelector("#hourly_result_text");
+        let dailyResultTextDom = document.querySelector("#daily_result_text");
+        let weeklyResultTextDom = document.querySelector("#weekly_result_text");
+        let quarterlyResultTextDom = document.querySelector("#quarterly_result_text");
+        let monthlyResultTextDom = document.querySelector("#monthly_result_text");
+        let annualResultTextDom = document.querySelector("#annual_result_text");
+
+        let hourlyAdjustedResultTextDom = document.querySelector("#hourly_adjusted_result_text");
+        let dailyAdjustedResultTextDom = document.querySelector("#daily_adjusted_result_text");
+        let weeklyAdjustedResultTextDom = document.querySelector("#weekly_adjusted_result_text");
+        let quarterlyAdjustedResultTextDom = document.querySelector("#quarterly_adjusted_result_text");
+        let monthlyAdjustedResultTextDom = document.querySelector("#monthly_adjusted_result_text");
+        let annualAdjustedResultTextDom = document.querySelector("#annual_adjusted_result_text");
+
+        let wageFormDom = document.querySelector("#wage_form");
+        let perDom = document.querySelector("#per");
+        let salaryDom = document.querySelector("#salary");
+        let holidaysDom = document.querySelector("#holidays");
+        let hoursPerDayDom = document.querySelector("#hours_per_day");
+        let hoursPerWeekDom = document.querySelector("#hours_per_week");
+        let daysPerWeekDom = document.querySelector("#days_per_week");
+
+        wageFormDom.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const per = perDom?.value || "day";
+            const salary = parseFloat(salaryDom?.value);
+            const holidays = holidaysDom?.value ? parseInt(holidaysDom?.value) : 0;
+            const hoursPerWeek = parseFloat(hoursPerWeekDom?.value);
+            const daysPerWeek = parseFloat(daysPerWeekDom?.value);
+
+            if (!hoursPerWeek || !daysPerWeek) {
+                alert("Hours per Week or Days per Week is invalid");
+                return;
+            }
+
+
+            const result = calculateSalary(salary, per, hoursPerWeek, daysPerWeek, 260);
+            hourlyResultTextDom.innerHTML = "₱" + result.Hourly;
+            dailyResultTextDom.innerHTML = "₱" + result.Daily;
+            weeklyResultTextDom.innerHTML = "₱" + result.Weekly;
+            monthlyResultTextDom.innerHTML = "₱" + result.Monthly;
+            quarterlyResultTextDom.innerHTML = "₱" + result.Quarterly;
+            annualResultTextDom.innerHTML = "₱" + result.Annual;
+
+            const unadjustedResult = calculateSalary(salary, per, hoursPerWeek, daysPerWeek, 260 - holidays);
+            hourlyAdjustedResultTextDom.innerHTML = "₱" + unadjustedResult.Hourly;
+            dailyAdjustedResultTextDom.innerHTML = "₱" + unadjustedResult.Daily;
+            weeklyAdjustedResultTextDom.innerHTML = "₱" + unadjustedResult.Weekly;
+            monthlyAdjustedResultTextDom.innerHTML = "₱" + unadjustedResult.Monthly;
+            quarterlyAdjustedResultTextDom.innerHTML = "₱" + unadjustedResult.Quarterly;
+            annualAdjustedResultTextDom.innerHTML = "₱" + unadjustedResult.Annual;
+        });
+
+        function calculateSalary (salaryAmount, per, hoursPerWeek = 40, daysPerWeek = 5, averageWorkingDaysInAYear) {
+            const WEEKS_IN_MONTH = (AVERAGE_WORKING_DAYS_YEAR / daysPerWeek) / 12;
+            let hoursPerDay = hoursPerWeek / daysPerWeek;
+            // DEFAULTS
+            let Hourly = 0;
+            let Daily = 0;
+            let Weekly = 0;
+            let Monthly = 0;
+            let Quarterly = 0;
+            let Annual = 0;
+
+            switch (per) {
+                case "hour":
+                    Annual = (salaryAmount * hoursPerDay) * averageWorkingDaysInAYear;
+                    break;
+                case "day":
+                    Annual = salaryAmount * averageWorkingDaysInAYear;
+                    break;
+                case "week":
+                    Annual = (salaryAmount / daysPerWeek) * averageWorkingDaysInAYear;
+                    break;
+                case "month":
+                    Annual = (salaryAmount / WEEKS_IN_MONTH) / daysPerWeek * averageWorkingDaysInAYear;
+                    break;
+                case "year":
+                    Annual = salaryAmount / averageWorkingDaysInAYear;
+                    break;
+                default:
+                    // Handle invalid "per" value (optional)
+                    console.error("Invalid payment type provided. Please use 'hour', 'day', 'week', 'month', or 'year'");
+            }
+
+            Hourly = (Annual / AVERAGE_WORKING_DAYS_YEAR) / hoursPerDay;
+            Daily = (Annual / AVERAGE_WORKING_DAYS_YEAR);
+            Weekly = Daily * daysPerWeek;
+            Monthly = Weekly * WEEKS_IN_MONTH;
+            Quarterly = (Daily * AVERAGE_WORKING_DAYS_YEAR) / 4;
+
+            // CONVERT RESULT TO 2 DECIMAL PLACES
+            Hourly = parseFloat(Hourly.toFixed(2)).toLocaleString();
+            Daily = parseFloat(Daily.toFixed(2)).toLocaleString();
+            Weekly = parseFloat(Weekly.toFixed(2)).toLocaleString();
+            Monthly = parseFloat(Monthly.toFixed(2)).toLocaleString();
+            Quarterly = parseFloat(Quarterly.toFixed(2)).toLocaleString();
+            Annual = parseFloat(Annual.toFixed(2)).toLocaleString();
+
+            return {
+                Hourly,
+                Daily,
+                Weekly,
+                Monthly,
+                Quarterly,
+                Annual,
+            };
+        }
+
+
+        // Features
+
+        const ALLOWED_KEYS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+
+        salaryDom.addEventListener("keydown", function (event) {
+            if (!ALLOWED_KEYS.includes(event.key)) {
+                event.preventDefault(); // Prevent default behavior (adding the character)
+            }
+        });
+
+        hoursPerDayDom.addEventListener("keydown", function (event) {
+            if (!ALLOWED_KEYS.includes(event.key)) {
+                event.preventDefault(); // Prevent default behavior (adding the character)
+            }
+            // const hoursPerDay = parseFloat(hoursPerDayDom?.value);
+            const hoursPerWeek = parseFloat(hoursPerWeekDom?.value);
+            const daysPerWeek = parseFloat(daysPerWeekDom?.value);
+            if (!!hoursPerWeek && !!daysPerWeek) {
+                let hours = parseFloat(event.key);
+                hoursPerWeekDom.value = daysPerWeek * hours;
+            }
+        });
+
+        hoursPerWeekDom.addEventListener("keydown", function (event) {
+            if (!ALLOWED_KEYS.includes(event.key)) {
+                event.preventDefault(); // Prevent default behavior (adding the character)
+            }
+            // const hoursPerDay = parseFloat(hoursPerDayDom?.value);
+            const hoursPerDay = parseFloat(hoursPerDayDom?.value);
+            const daysPerWeek = parseFloat(daysPerWeekDom?.value);
+            if (!!hoursPerDay && !!daysPerWeek) {
+                let hours = parseFloat(event.key);
+                hoursPerDayDom.value = hours * daysPerWeek;
+            }
+        });
+    </script>
+</body>
+
+</html>
